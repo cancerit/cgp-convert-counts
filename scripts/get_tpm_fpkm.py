@@ -83,7 +83,7 @@ def create_df(infile,skip_footer,skip_header,col_names, index_label):
 def main():
     usage = "\n %prog [options] -c count_file.tsv -g gene_len.tsv "
 
-    optParser = argparse.ArgumentParser(prog='get_fpkm')
+    optParser = argparse.ArgumentParser(prog='get_tpm_fpkm.py')
     optional = optParser._action_groups.pop()
     required = optParser.add_argument_group('required arguments')
 
