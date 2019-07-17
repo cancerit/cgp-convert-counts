@@ -39,7 +39,7 @@ def merge_files(exp_type, **opt):
 
     mydfs.append(gene_len_df)
     for (dirpath, dirnames, filenames) in os.walk("."):
-        for myfile in filenames:
+        for myfile in sorted(filenames):
             if myfile.endswith(merge_ext):
                 (sample,_)=os.path.splitext(myfile)
                 sample=sample.split(".")[0]
@@ -68,7 +68,7 @@ def create_df_to_merge(infile,skip_header):
 def main():
     usage = "\n %prog [options] -g gene_len.tsv  -merge_ext _count_fpkm_tpm.tsv"
 
-    optParser = argparse.ArgumentParser(prog='get_fpkm')
+    optParser = argparse.ArgumentParser(prog='merge_samples.py')
     optional = optParser._action_groups.pop()
     required = optParser.add_argument_group('required arguments')
 
