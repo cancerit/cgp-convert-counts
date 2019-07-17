@@ -13,6 +13,7 @@ script:
  - docker build -t cgp-convert-counts .
  - docker images | grep -c cgp-convert-counts
  - echo 'Verify program(s) from this repo'
- ## mapping
- - docker run -t --rm cgp-convert-counts python3 --version
+ - docker run -t --rm cgp-convert-counts get_tpm_fpkm.py --version
+ - docker run -t --rm cgp-convert-counts gtftools --version
+ - docker run -t --rm cgp-convert-counts merge_samples.py --version
  
