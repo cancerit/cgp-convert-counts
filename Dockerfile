@@ -1,12 +1,40 @@
-FROM python:3.7.4-alpine3.10
+FROM ubuntu:18.04
 
-# Add service user
-ENV USER=casm
-ENV HOME=/opt/casm
-RUN mkdir -p $HOME
+LABEL maintainer="cgphelp@sanger.ac.uk" \
+      uk.ac.sanger.cgp="Cancer, Ageing and Somatic Mutation, Wellcome Trust Sanger Institute" \
+      version="0.1.0" \
+      description="cgp-convert-counts container"
+
+RUN apt-get -yq update
+RUN apt-get install -yq --no-install-recommends \
+    ca-certificates \
+    curl \
+    python3.7 python3.7-dev python3.7-distutils \
+    unattended-upgrades && \
+    unattended-upgrade -d -v && \
+    apt-get remove -yq unattended-upgrades && \
+    apt-get autoremove -yq && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 1
+
+# install pip3
+RUN curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+    python3 get-pip.py && rm -f get-pip.py
+
+# install dependency packages
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt && rm requirements.txt
+
+# setting up the final user
+ENV USER casm
+ENV HOME /home/casm
+ENV OPT /opt/casm
+ENV PATH $OPT/bin:$PATH
 RUN addgroup $USER && \
-    adduser -G $USER -D -h $HOME $USER
+    adduser --ingroup $USER --disabled-password --home $HOME --shell /bin/bash --gecos '' $USER
 
-# copy the script to $HOME
+# copy python scripts to $HOME
+COPY scripts/*.py $OPT/bin/
 
+# become the user
+USER casm
 WORKDIR $HOME
