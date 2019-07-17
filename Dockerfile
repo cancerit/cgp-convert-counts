@@ -29,8 +29,7 @@ ENV USER casm
 ENV HOME /home/casm
 ENV OPT /opt/casm
 ENV PATH $OPT/bin:$PATH
-RUN addgroup $USER && \
-    adduser --ingroup $USER --disabled-password --home $HOME --shell /bin/bash --gecos '' $USER
+RUN adduser --disabled-password --shell /bin/bash --gecos '' $USER
 
 # copy python scripts to $HOME
 COPY scripts/*.py $OPT/bin/
