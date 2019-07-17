@@ -1,4 +1,2 @@
-tzlocal
 numpy
 pandas
-scipy
