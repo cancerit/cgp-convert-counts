@@ -19,7 +19,7 @@ script:
  - ls $TRAVIS_BUILD_DIR
  - |
   docker run -t --rm \
-  -v "$TRAVIS_BUILD_DIR/test/Data:/home/casm/data:ro" \
+  -v "$TRAVIS_BUILD_DIR/test/Data:/home/casm/Data:ro" \
   -v "$TRAVIS_BUILD_DIR/test/test_in_docker.sh:/home/casm/test_in_docker.sh:ro" \
   cgp-convert-counts ./test_in_docker.sh
  
