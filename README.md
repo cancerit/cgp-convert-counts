@@ -2,10 +2,9 @@
 
 This project contain tools for converting RNAseq count data.
 
----
 ## Contained tools
 
-### Gene length calculation: **gtfools.py**
+### Gene length calculation: *gtfools.py*
 
 Please refer to `gtfools.py -h` for its usage.
 
@@ -16,15 +15,14 @@ Below is an example output:
 #ENSG00000255274	TMPRSS4-AS1	antisense	11	313	304	382	453
 ```
 
-### FPKM calculation from raw counts: **get_tpm_fpkm.py**
+### FPKM calculation from raw counts: *get_tpm_fpkm.py*
 
 Please refer to `get_tpm_fpkm.py -h` for its usage.
 
-### Merge output of *get_tpm_fpkm.py* into a single file: **merge_samples.py**
+### Merge output of *get_tpm_fpkm.py* into a single file: *merge_samples.py*
 
 Please refer to `merge_samples.py -h` for its usage.
 
----
 ## LICENSE
 
 Copyright (c) 2019 Genome Research Ltd.
