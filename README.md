@@ -1,20 +1,40 @@
 # cgp-convert-counts
 
-tools for converting RNAseq count data
+This project contain tools for converting RNAseq count data.
 
-### how to run genelength calculations... 
+---
+## Contained tools
 
-python gtfools.py -l gene_length.tsv ensembl.gtf
+### Gene length calculation: **gtfools.py**
 
-### output columns (e.g.,): 
+Please refer to `gtfools.py -h` for its usage.
+
+Below is an example output:
+
+```bash
 #ensid	gene	biotype	chr	mean median longest_isoform	merged
 #ENSG00000255274	TMPRSS4-AS1	antisense	11	313	304	382	453
-### how to run fpkm calculations...
+```
 
-python get_tpm_fpkm.py -c htseq_count.txt -g gene_length.tsv
+### FPKM calculation from raw counts: **get_tpm_fpkm.py**
 
-### refere ```get_tpm_fpkm.py -h``` for more options
+Please refer to `get_tpm_fpkm.py -h` for its usage.
 
-### additional script addd for user to merge samples into a single file...
+### Merge output of *get_tpm_fpkm.py* into a single file: **merge_samples.py**
 
-python merge_samples.py -g gene_length.tsv -merge_ext _count_fpkm_tpm.tsv
+Please refer to `merge_samples.py -h` for its usage.
+
+---
+## LICENSE
+
+Copyright (c) 2019 Genome Research Ltd.
+
+Author: CancerIT <cgpit@sanger.ac.uk>
+
+This file is part of cgp-convert-counts.
+
+cgp-convert-counts is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
