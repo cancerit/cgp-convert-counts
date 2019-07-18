@@ -26,7 +26,7 @@ def merge_files(exp_type, **opt):
     gene_len_file = opt['gene_len'].strip()
     merge_ext=opt['merge_ext'].strip()
     gene_len_col = opt['gene_length_column'].strip()
-
+    user_loc =  opt.get('input_path','.')
     mydfs=[]
     found_samples = set() # used to find duplcated samples
     column_order=[]
@@ -37,32 +37,24 @@ def merge_files(exp_type, **opt):
     drop_columns.remove(gene_len_col)
     # drop other columns except considered for gene length ...
     gene_len_df.drop(drop_columns, axis=1, inplace=True)
-
     mydfs.append(gene_len_df)
-    for (dirpath, dirnames, filenames) in os.walk("."):
+    for (dirpath, dirnames, filenames) in os.walk(user_loc,topdown=True):
+        # avoid going into subdirectories if any...
+        dirnames.clear()
         for myfile in sorted(filenames):
             if myfile.endswith(merge_ext):
                 (sample,_)=os.path.splitext(myfile)
                 sample=sample.split(".")[0]
-                if sample in found_samples:
-                    sys.exit('ERROR: duplicated sample file found for sample %s in %s' % (sample, dirpath))
-                else:
-                    found_samples.add(sample)
                 full_path=os.path.join(dirpath, myfile)
                 tmpdf=create_df_to_merge(full_path,8)
-                # drop column required to be merged
+                # select colum from data frame
                 tmpdf=tmpdf[[exp_type]]
-                #tmpdf.drop(['gene_name','length','tpm','count'], axis=1, inplace=True, errors='raise' )
                 tmpdf.columns=[sample]
                 column_order.append(sample)
                 mydfs.append(tmpdf)
-    combined_df = pd.concat(mydfs, axis=1, sort=True, verify_integrity=True)
-    combined_df.fillna(0,inplace=True)
-    #column_order.sort()
-    #column_order.insert(0,'gene')
-    #combined_df=combined_df[column_order]
-
-    _print_df(combined_df, 'merged_' + exp_type + '.tsv', index_label)
+        combined_df = pd.concat(mydfs, axis=1, sort=True, join="inner", verify_integrity=True)
+        combined_df.fillna(0,inplace=True)
+        _print_df(combined_df, 'merged_' + exp_type + '.tsv', index_label)
     return
 
 def create_df_to_merge(infile,skip_header):
@@ -85,7 +77,10 @@ def main():
                           help="gene length column name to use from gene_len file default:longest_isoform")
 
     required.add_argument("-merge_ext", "--merge_ext", type=str, dest="merge_ext",
-                          default=None, help="merged results files unique extension")
+                          default=None, help="unique part of file extension to merge")
+
+    optional.add_argument("-in_path", "--input_path", type=str, dest="input_path",
+                          default=".", help="input directory path for files to merge")
 
     optional.add_argument("-col_name", "--column_names", type=str, nargs='+', dest="column_names",
                           required=False,
