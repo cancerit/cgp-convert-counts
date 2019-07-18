@@ -28,6 +28,7 @@ def merge_files(exp_type, **opt):
     gene_len_col = opt['gene_length_column'].strip()
     user_loc =  opt.get('input_path','.')
     mydfs=[]
+    found_samples = set() # used to find duplcated samples
     column_order=[]
     index_label = 'ensid'
     gene_len_df = create_df(gene_len_file,0,1, [index_label,'gene','biotype','chr', 'mean','median', 'longest_isoform', 'merged'], index_label)
@@ -36,9 +37,9 @@ def merge_files(exp_type, **opt):
     drop_columns.remove(gene_len_col)
     # drop other columns except considered for gene length ...
     gene_len_df.drop(drop_columns, axis=1, inplace=True)
-
     mydfs.append(gene_len_df)
     for (dirpath, dirnames, filenames) in os.walk(user_loc,topdown=True):
+        # avoid going into subdirectories if any...
         dirnames.clear()
         for myfile in sorted(filenames):
             if myfile.endswith(merge_ext):
@@ -46,9 +47,8 @@ def merge_files(exp_type, **opt):
                 sample=sample.split(".")[0]
                 full_path=os.path.join(dirpath, myfile)
                 tmpdf=create_df_to_merge(full_path,8)
-                # drop column required to be merged
+                # select colum from data frame
                 tmpdf=tmpdf[[exp_type]]
-                #tmpdf.drop(['gene_name','length','tpm','count'], axis=1, inplace=True, errors='raise' )
                 tmpdf.columns=[sample]
                 column_order.append(sample)
                 mydfs.append(tmpdf)
@@ -79,7 +79,7 @@ def main():
     required.add_argument("-merge_ext", "--merge_ext", type=str, dest="merge_ext",
                           default=None, help="unique part of file extension to merge")
 
-    optional.add_argument("-input", "--input_path", type=str, dest="input_path",
+    optional.add_argument("-in_path", "--input_path", type=str, dest="input_path",
                           default=".", help="input directory path for files to merge")
 
     optional.add_argument("-col_name", "--column_names", type=str, nargs='+', dest="column_names",
