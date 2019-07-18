@@ -26,7 +26,7 @@ def merge_files(exp_type, **opt):
     gene_len_file = opt['gene_len'].strip()
     merge_ext=opt['merge_ext'].strip()
     gene_len_col = opt['gene_length_column'].strip()
-
+    user_loc =  opt.get('input_path','.')
     mydfs=[]
     column_order=[]
     index_label = 'ensid'
@@ -38,7 +38,8 @@ def merge_files(exp_type, **opt):
     gene_len_df.drop(drop_columns, axis=1, inplace=True)
 
     mydfs.append(gene_len_df)
-    for (dirpath, dirnames, filenames) in os.walk("."):
+    for (dirpath, dirnames, filenames) in os.walk(user_loc,topdown=True):
+        dirnames.clear()
         for myfile in sorted(filenames):
             if myfile.endswith(merge_ext):
                 (sample,_)=os.path.splitext(myfile)
@@ -51,12 +52,8 @@ def merge_files(exp_type, **opt):
                 tmpdf.columns=[sample]
                 column_order.append(sample)
                 mydfs.append(tmpdf)
-        combined_df = pd.concat(mydfs, axis=1, sort=True, verify_integrity=True)
+        combined_df = pd.concat(mydfs, axis=1, sort=True, join="inner", verify_integrity=True)
         combined_df.fillna(0,inplace=True)
-        #column_order.sort()
-        #column_order.insert(0,'gene')
-        #combined_df=combined_df[column_order]
-
         _print_df(combined_df, 'merged_' + exp_type + '.tsv', index_label)
     return
 
@@ -80,7 +77,10 @@ def main():
                           help="gene length column name to use from gene_len file default:longest_isoform")
 
     required.add_argument("-merge_ext", "--merge_ext", type=str, dest="merge_ext",
-                          default=None, help="merged results files unique extension")
+                          default=None, help="unique part of file extension to merge")
+
+    optional.add_argument("-input", "--input_path", type=str, dest="input_path",
+                          default=".", help="input directory path for files to merge")
 
     optional.add_argument("-col_name", "--column_names", type=str, nargs='+', dest="column_names",
                           required=False,
