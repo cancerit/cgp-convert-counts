@@ -28,7 +28,6 @@ def merge_files(exp_type, **opt):
     gene_len_col = opt['gene_length_column'].strip()
     user_loc =  opt.get('input_path','.')
     mydfs=[]
-    found_samples = set() # used to find duplcated samples
     column_order=[]
     index_label = 'ensid'
     gene_len_df = create_df(gene_len_file,0,1, [index_label,'gene','biotype','chr', 'mean','median', 'longest_isoform', 'merged'], index_label)
