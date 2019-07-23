@@ -9,7 +9,7 @@ RUN apt-get -yq update
 RUN apt-get install -yq --no-install-recommends \
     ca-certificates \
     curl \
-    python3.7 python3.7-dev python3.7-distutils \
+    python3.7 python3.7-distutils \
     unattended-upgrades && \
     unattended-upgrade -d -v && \
     apt-get remove -yq unattended-upgrades && \
@@ -18,7 +18,7 @@ RUN apt-get install -yq --no-install-recommends \
 
 # install pip3
 RUN curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-    python3 get-pip.py && rm -f get-pip.py
+    python3 get-pip.py --prefix=/usr/local/ && rm -f get-pip.py
 
 # install dependency packages
 COPY requirements.txt .
