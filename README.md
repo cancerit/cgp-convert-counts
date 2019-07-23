@@ -4,24 +4,30 @@ This project contain tools for converting RNAseq count data.
 
 ## Contained tools
 
-### Gene length calculation: *gtfools.py*
+* ### gtfools.py
 
-Please refer to `gtfools.py -h` for its usage.
+    The script can be used to calculate gene length from GTF files. 
 
-Below is an example output:
+    Please refer to `gtfools.py -h` for its usage.
 
-```bash
-#ensid	gene	biotype	chr	mean median longest_isoform	merged
-#ENSG00000255274	TMPRSS4-AS1	antisense	11	313	304	382	453
-```
+    Below is an example output:
 
-### FPKM calculation from raw counts: *get_tpm_fpkm.py*
+    ```bash
+    #ensid	gene	biotype	chr	mean median longest_isoform	merged
+    #ENSG00000255274	TMPRSS4-AS1	antisense	11	313	304	382	453
+    ```
 
-Please refer to `get_tpm_fpkm.py -h` for its usage.
+* ### get_tpm_fpkm.py
 
-### Merge output of *get_tpm_fpkm.py* into a single file: *merge_samples.py*
+    The script calculates FPKM from raw HT-Seq counts
 
-Please refer to `merge_samples.py -h` for its usage.
+    Please refer to `get_tpm_fpkm.py -h` for its usage.
+
+* ### merge_samples.py
+
+    The script merges single sample results of *get_tpm_fpkm.py* into one file.
+
+    Please refer to `merge_samples.py -h` for its usage.
 
 ## LICENSE
 
