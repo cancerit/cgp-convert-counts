@@ -517,6 +517,7 @@ def get_gene_length(GTFfile_obj,genelength_file=''):
 	record exon coordinates
 	calculate length of merged exons
 	'''
+	print('Calculating gene length from GTF...', end='', flush=True)
 	merged_data = merge_exon(GTFfile_obj)
 	merged_gene_length = merged_data['merged_gene_length']
 	metadata = merged_data['metadata']
@@ -534,8 +535,10 @@ def get_gene_length(GTFfile_obj,genelength_file=''):
 		for iisoform in isoforms:
 			length_set.append(isolength[iisoform])
 		gene_length[igene] = [int(list_mean(length_set)),int(list_median(length_set)),max(length_set),merged_gene_length[igene]]
+	print('Done')
 
 	if len(genelength_file) > 1:
+		print('Writing gene length to file...', end='', flush=True)
 		f = open(genelength_file,'w')
 		f.write('ensid\tgene\tbiotype\tchr\tmean\tmedian\tlongest_isoform\tmerged\n')
 		for igene in gene_length:
@@ -544,6 +547,7 @@ def get_gene_length(GTFfile_obj,genelength_file=''):
 			tmplst = [igene,metalist[0], metalist[1], metalist[2], str(tmp[0]),str(tmp[1]),str(tmp[2]),str(tmp[3])]
 			f.write('\t'.join(tmplst)+'\n')
 		f.close()
+		print('Done')
 
 
 def get_exon(GTFfile_obj,exon_file=''):
@@ -637,6 +641,7 @@ def gencode2ensembl(gtf1,gtf2):
 	gtf2: gencode GTF file object
 	'''
 
+	print('Converting GTF to ENSEMBL format...', end = '', flush=True)
 	for line in gtf1:
 		if line[0:3] == 'chr':
 			t = line.strip().split('\t')
@@ -651,6 +656,7 @@ def gencode2ensembl(gtf1,gtf2):
 			gtf2.write(out)
 		else:
 			gtf2.write(line)
+	print('Done')
 	# return pointer to the start
 	gtf1.seek(0)
 	gtf2.seek(0)
@@ -660,13 +666,14 @@ def gtf_format_check(gtf):
 	'''
 	check format of GTF: ensembl or gencode
 	'''
-	gtf.seek(10000)
-	gtf.readline()
-	chrom=gtf.readline().split('\t')[0]
-	if len(chrom) >= 4:
-		ftype = 'GENCODE'
-	else:
-		ftype = 'ENSEMBL'
+	for line in gtf:
+		if not line.startswith('#'):
+			chrom=line.split('\t')[0]
+			if len(chrom) >= 4:
+				ftype = 'GENCODE'
+			else:
+				ftype = 'ENSEMBL'
+			break
 	gtf.seek(0)
 	return(ftype)
 
@@ -735,10 +742,9 @@ args = parser.parse_args()   # parse command-line arguments
 ######################################
 with open(args.GTFfile, 'r') as GTFfile, tempfile.TemporaryFile(mode='w+t') as GTFfile_ensembl:
 	ftype = gtf_format_check(GTFfile)
+	print('Input GTF format is '+ftype)
 	in_file_obj = GTFfile
-	print(('GTF format is '+ftype))
 	if ftype == 'GENCODE':
-		print('Converting GTF to ENSEMBL format')
 		gencode2ensembl(GTFfile, GTFfile_ensembl)
 		in_file_obj = GTFfile_ensembl
 
