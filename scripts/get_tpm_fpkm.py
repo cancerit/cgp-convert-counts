@@ -13,6 +13,18 @@ version = "1.0.0"
 #HTSEQ count footer is removed (last 5 lines)....
 # prepare data
 def prepare_data(**opt):
+
+    # check output directory exists, create if not, exit if can't create.
+    if opt['output_dir']:
+        if not os.path.exists(opt['output_dir']):
+            try:
+                os.mkdir(opt['output_dir'])
+            except OSError:
+                print ("Failed to create the output directory: %s" % opt['output_dir'])
+                sys.exit(1)
+    else:
+        opt['output_dir'] = os.getcwd()
+
     count_file = opt['count_file']
     gene_len_file = opt['gene_len']
     index_label = 'ensid'
@@ -64,17 +76,21 @@ def prepare_data(**opt):
 
     header_df=pd.DataFrame.from_dict(header_data,orient='index')
 
-    _print_df(combined_df, index_label, count_file, header_df)
+    _print_df(combined_df, index_label, count_file, header_df, opt['output_dir'])
 
     return
 
 # print data frame 
-def _print_df(mydf, index_label, count_file, header_df ):
+def _print_df(mydf, index_label, count_file, header_df, output_dir):
     mydf = mydf.round(decimals=2)
     (_, name) = os.path.split(count_file)
     (out_file, _) = os.path.splitext(name)
-    header_df.to_csv(out_file + '_count_fpkm_tpm.tsv',sep="\t", header=False, mode ='w')
-    mydf.to_csv(out_file + '_count_fpkm_tpm.tsv', sep='\t', mode='a', header=True, index=True, index_label="#"+index_label, doublequote=False)
+    out_file += '_count_fpkm_tpm.tsv'
+    out_file = os.path.join(output_dir, out_file)
+    if os.path.exists(out_file):
+        sys.exit("Error: existing out_file: %s, not to overwite, exits!" % out_file)
+    header_df.to_csv(out_file,sep="\t", header=False, mode ='w')
+    mydf.to_csv(out_file, sep='\t', mode='a', header=True, index=True, index_label="#"+index_label, doublequote=False)
 
 def create_df(infile,skip_footer,skip_header,col_names, index_label):
     df = pd.read_csv(infile, compression='infer', sep="\t", skipfooter=skip_footer, skiprows=skip_header, engine='python', names=col_names,  header=None, index_col=index_label)
@@ -92,6 +108,9 @@ def main():
 
     required.add_argument("-g", "--gene_len", type=str, dest="gene_len", required=True,
                           default=None, help="gene length file path, format: ensid gene_name length [Warning first line will be skipped as header]")
+    
+    optional.add_argument("-od", "--output_dir", type=str, dest="output_dir", required=False,
+                          default=None, help="output directory path, default to current directory.")
 
     optional.add_argument("-minrc", "--minimum_read_count", type=int, dest="minimum_read_count", required=False,
                           default=0, help="Minimum read count to consider for fpkm,tpm calculations default:0")
