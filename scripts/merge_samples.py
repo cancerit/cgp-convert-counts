@@ -5,7 +5,7 @@ import sys
 import argparse
 import pandas as pd
 
-version = "1.0.0"
+version = "1.0.1"
 
 # converts count data to fpkm and tpm values
 # needs some mofifications before running ....
@@ -45,7 +45,14 @@ def merge_files(exp_type, **opt):
                 (sample,_)=os.path.splitext(myfile)
                 sample=sample.split(".")[0]
                 full_path=os.path.join(dirpath, myfile)
-                tmpdf=create_df_to_merge(full_path,8)
+                skip_header = 0
+                with open(full_path, 'r') as sample_counts:
+                    for line in sample_counts:
+                        if not line.startswith('##'):
+                            break
+                        else:
+                            skip_header += 1
+                tmpdf=create_df_to_merge(full_path,skip_header)
                 # select colum from data frame
                 tmpdf=tmpdf[[exp_type]]
                 tmpdf.columns=[sample]

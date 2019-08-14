@@ -6,7 +6,9 @@ This project contain tools for converting RNAseq count data.
 
 * ### gtfools.py
 
-    The script can be used to calculate gene length from GTF files. 
+    The script is based on [GTFtools](http://www.genemine.org/gtftools.php) and can be used to calculate gene length from GTF files. If you use this script please cite:
+    
+    Hong-Dong Li, GTFtools: a Python package for analyzing various modes of gene models, bioRxiv, 263517, doi: https://doi.org/10.1101/263517
 
     Please refer to `gtfools.py -h` for its usage.
 
