@@ -1,5 +1,11 @@
 # cgp-convert-counts
 
+[![Quay Badge][quay-status]][quay-repo]
+
+| Master                                        | Develop                                         |
+| --------------------------------------------- | ----------------------------------------------- |
+| [![Master Badge][travis-master]][travis-base] | [![Develop Badge][travis-develop]][travis-base] |
+
 This project contain tools for converting RNAseq count data.
 
 ## Contained tools
@@ -44,3 +50,14 @@ cgp-convert-counts is free software: you can redistribute it and/or modify it un
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+
+<!-- Travis -->
+[travis-base]: https://travis-ci.org/cancerit/cgp-convert-counts
+[travis-master]: https://travis-ci.org/cancerit/cgp-convert-counts.svg?branch=master
+[travis-develop]: https://travis-ci.org/cancerit/cgp-convert-counts.svg?branch=develop
+
+<!-- Quay.io -->
+[quay-status]: https://quay.io/repository/wtsicgp/cgp-convert-counts/status
+[quay-repo]: https://quay.io/repository/wtsicgp/cgp-convert-counts
+[quay-builds]: https://quay.io/repository/wtsicgp/cgp-convert-counts?tab=builds
