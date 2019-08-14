@@ -733,7 +733,7 @@ parser.add_argument('-s','--isoform',metavar='isoform',help="file name for isofo
 parser.add_argument('-g','--gene',metavar='gene',help="file name for gene bed data.")
 parser.add_argument('-t','--TSS',metavar='TSS',help="file name for a region centering at transcription start site (TSS). It is calculated as (TSS-w,TSS+w) where w is a user-specified distance, say 2000bp.")
 parser.add_argument('-w','--window',metavar='window_size',help="the value of w in calculating TSS regions as described in '-t'. Default: 2000")
-parser.add_argument('-v','--version',action='version',version="GTFtools version:0.6.5")
+parser.add_argument('-v','--version',action='version',version="GTFtools version:0.6.5-CASM-Revised")
 args = parser.parse_args()   # parse command-line arguments
 
 

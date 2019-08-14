@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 
 LABEL maintainer="cgphelp@sanger.ac.uk" \
       uk.ac.sanger.cgp="Cancer, Ageing and Somatic Mutation, Wellcome Trust Sanger Institute" \
-      version="0.1.0" \
+      version="0.1.1" \
       description="cgp-convert-counts container"
 
 RUN apt-get -yq update

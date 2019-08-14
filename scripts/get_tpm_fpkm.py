@@ -6,7 +6,7 @@ import argparse
 import pandas as pd
 import numpy as np
 
-version = "1.0.0"
+version = "1.0.1"
 
 # converts count data to fpkm and tpm values
 # remove anyheaders ...
