@@ -62,35 +62,34 @@ def prepare_data(**opt):
     combined_df['fpkm_uq'] = (combined_df['count'] * 1e9) / (uq * combined_df[gene_len_col])
     #TPM = FPKM / (sum of FPKM over all genes/transcripts) * 10^6
     combined_df['tpm'] = combined_df['fpkm']/ combined_df['fpkm'].sum() * 1e6
-	# print results and header lines ....
-
-    print(combined_df.shape)
-
+	
+    # print results and header lines ....
     header_data={}
     for key in opt:
-        if key is not None:
-            header_data["##"+key+"="]=str(opt[key])
+        if key is not None and key not in ['verbose', 'output_dir', 'no_compression']:
+            header_data["##"+key]=str(opt[key])
 
-    header_data['##Upper_Quartile_Val=']=str(uq)
-    header_data['##WARNING user filtered read count is set to ='] = 0
-
+    header_data['##Upper_Quartile_Val']=str(uq)
     header_df=pd.DataFrame.from_dict(header_data,orient='index')
 
-    _print_df(combined_df, index_label, count_file, header_df, opt['output_dir'])
+    _print_df(combined_df, index_label, count_file, header_df, opt['output_dir'], opt['no_compression'])
 
     return
 
 # print data frame 
-def _print_df(mydf, index_label, count_file, header_df, output_dir):
+def _print_df(mydf, index_label, count_file, header_df, output_dir, no_compression):
     mydf = mydf.round(decimals=2)
     (_, name) = os.path.split(count_file)
     (out_file, _) = os.path.splitext(name)
     out_file += '_count_fpkm_tpm.tsv'
+    if no_compression != True:
+        out_file += '.gz'
+
     out_file = os.path.join(output_dir, out_file)
     if os.path.exists(out_file):
         sys.exit("Error: existing out_file: %s, not to overwite, exits!" % out_file)
-    header_df.to_csv(out_file,sep="\t", header=False, mode ='w')
-    mydf.to_csv(out_file, sep='\t', mode='a', header=True, index=True, index_label="#"+index_label, doublequote=False)
+    header_df.to_csv(out_file,sep='=', header=False, mode ='w', compression='infer')
+    mydf.to_csv(out_file, sep='\t', mode='a', header=True, index=True, index_label="#"+index_label, doublequote=False, compression='infer')
 
 def create_df(infile,skip_footer,skip_header,col_names, index_label):
     df = pd.read_csv(infile, compression='infer', sep="\t", skipfooter=skip_footer, skiprows=skip_header, engine='python', names=col_names,  header=None, index_col=index_label)
@@ -111,6 +110,8 @@ def main():
     
     optional.add_argument("-od", "--output_dir", type=str, dest="output_dir", required=False,
                           default=None, help="output directory path, default to current directory.")
+    
+    optional.add_argument('-nc', '--no_compression', dest='no_compression', action='store_true', default=False)
 
     optional.add_argument("-minrc", "--minimum_read_count", type=int, dest="minimum_read_count", required=False,
                           default=0, help="Minimum read count to consider for fpkm,tpm calculations default:0")
