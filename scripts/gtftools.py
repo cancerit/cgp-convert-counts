@@ -5,6 +5,8 @@ import argparse
 import sys
 import tempfile
 
+version = "0.1.2"
+
 ###############
 # sb43 modified to suit casm need and output additional columns : boiotype, gnene name and chromosome
 # Hong-Dong Li, GTFtools: a Python package for analyzing various modes of gene models, bioRxiv, 263517, doi: https://doi.org/10.1101/263517
@@ -733,7 +735,7 @@ parser.add_argument('-s','--isoform',metavar='isoform',help="file name for isofo
 parser.add_argument('-g','--gene',metavar='gene',help="file name for gene bed data.")
 parser.add_argument('-t','--TSS',metavar='TSS',help="file name for a region centering at transcription start site (TSS). It is calculated as (TSS-w,TSS+w) where w is a user-specified distance, say 2000bp.")
 parser.add_argument('-w','--window',metavar='window_size',help="the value of w in calculating TSS regions as described in '-t'. Default: 2000")
-parser.add_argument('-v','--version',action='version',version="GTFtools version:0.6.5-CASM-Revised")
+parser.add_argument('-v','--version',action='version',version="GTFtools version: %s" % version)
 args = parser.parse_args()   # parse command-line arguments
 
 
