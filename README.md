@@ -4,13 +4,13 @@ This project contain tools for converting RNAseq count data.
 
 ## Contained tools
 
-* ### gtfools.py
+* ### gtftools.py
 
-    The script is based on [GTFtools](http://www.genemine.org/gtftools.php) and can be used to calculate gene length from GTF files. If you use this script please cite:
+    The script is based on [GTFtools](http://www.genemine.org/gtftools.php)(Version: 0.6.5) and can be used to calculate gene length from GTF files. If you use this script please cite:
     
     Hong-Dong Li, GTFtools: a Python package for analyzing various modes of gene models, bioRxiv, 263517, doi: https://doi.org/10.1101/263517
 
-    Please refer to `gtfools.py -h` for its usage.
+    Please refer to `gtftools.py -h` for its usage.
 
 * ### get_tpm_fpkm.py
 
