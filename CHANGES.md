@@ -1,5 +1,10 @@
 # CHANGES
 
+## 0.1.2
+
+* cleaned header of `get_tmp_fpkm.py`; It now produce compressed output by default, and has a `--no-compression` option to disable it.
+* consistent version number across scripts
+
 ## 0.1.1
 
 * `gtftools.py` now uses tempfile for intermidiate output, and tells GTF formate using the first line after headers in a GTF file.
