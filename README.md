@@ -46,7 +46,7 @@ This project contain tools for converting RNAseq count data.
 
     Please refer to `merge_samples.py -h` for its usage.
 
-        Below is an example output:
+    Below is an example output:
 
     ```bash
     $ head -n 5 merged_*
