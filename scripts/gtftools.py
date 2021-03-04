@@ -5,7 +5,7 @@ import argparse
 import sys
 import tempfile
 
-version = "0.1.2"
+version = "0.1.3"
 
 ###############
 # sb43 modified to suit casm need and output additional columns : boiotype, gnene name and chromosome
@@ -28,7 +28,7 @@ version = "0.1.2"
 ######## function list  ########
 ################################
 #1.	neighbor_merge: merge two ranges, say two exons
-#2.	bedmerge: merge a list of ranges, say a few exons 
+#2.	bedmerge: merge a list of ranges, say a few exons
 #3.	exon2intron: calculate intron bed from a list of exons.
 #4.	masked_intron: identify introns which are covered by exons of other isoforms
 #5.	get_UTR: get 5' and 3' UTR of isoforms.
@@ -53,7 +53,7 @@ def neighbor_merge(range1,range2):
 
 def bedmerge(featureRange):
 	# featureRange: a list of ranges in bed format, such as [(1,1000,2000,+),(1,2200,3000,-)]
-	featureRange.sort(key = lambda x: (x[0],x[1]))	
+	featureRange.sort(key = lambda x: (x[0],x[1]))
 	merged=[]
 	nRange=len(featureRange)
 	if nRange == 1:
@@ -69,7 +69,7 @@ def bedmerge(featureRange):
 		while n_imerge > 0:
 			if n_imerge == 2:
 				merged.append(imerge[0])
-			
+
 			imerge=neighbor_merge(imerge[n_imerge-1],featureRange[i])
 			n_imerge=len(imerge)
 			if i == nRange-1:
@@ -78,11 +78,11 @@ def bedmerge(featureRange):
 				n_imerge = -1
 			i+=1
 
-	return merged	
+	return merged
 
 
 def exon2intron(featureRange):
-	featureRange.sort(key = lambda x: (x[0],x[1]))	
+	featureRange.sort(key = lambda x: (x[0],x[1]))
 	nRange=len(featureRange)
 	intron=[]
 	if nRange > 1:
@@ -117,15 +117,15 @@ def masked_intron(GTFfile_obj,maskedfile="masked_intron.bed"):
 
 def get_UTR(GTFfile_obj, utr_file=""):
 	# record UTR, CDS and strand information for determining iUTR5 or iUTR3
-	utr = {} 
+	utr = {}
 	cds = {}
-	strand = {} 
+	strand = {}
 	for line in GTFfile_obj:
 		table = line.split('\t')
 		if line[0] != '#':
 			if table[2] == 'UTR' and 'transcript_id' in line:
 				tcx  = line.split('transcript_id')[1].split('"')[1]
-				gene = line.split('gene_id')[1].split('"')[1] 
+				gene = line.split('gene_id')[1].split('"')[1]
 				infor=[table[0],int(table[3]),int(table[4]),table[6],gene]
 				if tcx in utr:
 					utr[tcx].append(infor)
@@ -134,7 +134,7 @@ def get_UTR(GTFfile_obj, utr_file=""):
 				strand[tcx] = table[6]
 			if table[2] == 'CDS' and 'transcript_id' in line:
 				tcx  = line.split('transcript_id')[1].split('"')[1]
-				gene = line.split('gene_id')[1].split('"')[1] 
+				gene = line.split('gene_id')[1].split('"')[1]
 				cds[tcx] = int((int(table[3])+int(table[4]))/2)
 				strand[tcx] = table[6]
 	# return pointer to beginning
@@ -172,7 +172,7 @@ def get_UTR(GTFfile_obj, utr_file=""):
 			if len(iUTR3) > 1:
 				allUTR.append([iiutr[0],iUTR3[0]-1,iUTR3[-1],iiutr[3],iiutr[4],'3UTR',tcx])
 
-	allUTR.sort(key = lambda x: (x[0],x[1]))				
+	allUTR.sort(key = lambda x: (x[0],x[1]))
 
 	# print UTR to file if required
 	if len(utr_file) > 1:
@@ -196,7 +196,7 @@ def get_tss_region(GTFfile_obj,w=2000,tss_bed_file=''):
 		table = line.split('\t')
 		if table[2] == 'transcript':
 			chrom  = table[0]
-			strand = table[6] 
+			strand = table[6]
 			tcx = line.split('transcript_id')[1].split('"')[1]
 			geneid = line.split('gene_id')[1].split('"')[1]
 			genesymbol = line.split('gene_name')[1].split('"')[1]
@@ -236,7 +236,7 @@ def get_gene_bed(GTFfile_obj,gene_bed_file=''):
 	# return pointer to beginning
 	GTFfile_obj.seek(0)
 
-	# print to file if required 
+	# print to file if required
 	if len(gene_bed_file) > 1:
 		f=open(gene_bed_file,'w')
 		for ichrom in list(genebed.keys()):
@@ -267,7 +267,7 @@ def get_isoform_bed(GTFfile_obj,isoform_bed_file=''):
 	# return pointer to beginning
 	GTFfile_obj.seek(0)
 
-	# print to file if required 
+	# print to file if required
 	if len(isoform_bed_file) > 1:
 		f=open(isoform_bed_file,'w')
 		for ichrom in list(isoformbed.keys()):
@@ -294,8 +294,11 @@ def merge_exon(GTFfile_obj,merged_exon_file=''):
 					exon[gene]=[iexon]
 					#sb43 done only once for each gene....
 					biotype = line.split('gene_biotype')[1].split('"')[1]
-					gene_name = line.split('gene_name')[1].split('"')[1]
-					gene_meta[gene] = [gene_name, biotype, table[0] ]
+					if line.find('gene_name') >= 0:
+						gene_name = line.split('gene_name')[1].split('"')[1]
+						gene_meta[gene] = [gene_name, biotype, table[0] ]
+					else:
+						gene_meta[gene] = [gene, biotype, table[0] ]
 	# return pointer to beginning
 	GTFfile_obj.seek(0)
 	# merge all exons of each gene
@@ -304,7 +307,7 @@ def merge_exon(GTFfile_obj,merged_exon_file=''):
 	for gene in exon:
 		merged=bedmerge(exon[gene])
 		merged_exon[gene]=merged
-	
+
 		# calculate merged gene length(sum of non-overlapping exons)
 		length=0
 		for each in merged:
@@ -345,7 +348,7 @@ def get_independent_intron(GTFfile_obj,independent_intron_file='iintron.tmp'):
 					exon[ichr]=[iexon]
 	# return pointer to beginning
 	GTFfile_obj.seek(0)
-	
+
 	# get gene coordinates in bed formats
 	genebed=get_gene_bed(GTFfile_obj)
 
@@ -361,7 +364,7 @@ def get_independent_intron(GTFfile_obj,independent_intron_file='iintron.tmp'):
 				uniqued = unique_judge(item,ichrom_gene)
 				if len(uniqued)>0:
 					record.append(uniqued)
-	# write to file	
+	# write to file
 	f = open(independent_intron_file,'w')
 	record = list(set(record))
 	record.sort(key = lambda x: (x[0],x[1]))
@@ -436,7 +439,7 @@ def bed_subtract(bedA,bedB):
 				if i == nexons-1:
 					if iexon[2] < iend:
 						AminusB.append((ichr,iexon[2],iend,istrand))
-	
+
 	# return
 	return(AminusB)
 
@@ -505,7 +508,7 @@ def get_isoform_length(GTFfile_obj,isoformlength_file=''):
 		for thisiso in iso2gene:
 			out=thisiso+'\t'+iso2gene[thisiso]+'\t'+str(isolength[thisiso])+'\n'
 			f.write(out)
-		f.close()	
+		f.close()
 
 	# return
 	ret={}
