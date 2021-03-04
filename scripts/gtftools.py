@@ -5,7 +5,7 @@ import argparse
 import sys
 import tempfile
 
-version = "0.1.2"
+version = "0.1.3"
 
 ###############
 # sb43 modified to suit casm need and output additional columns : boiotype, gnene name and chromosome

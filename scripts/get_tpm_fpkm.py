@@ -6,7 +6,7 @@ import argparse
 import pandas as pd
 import numpy as np
 
-version = "0.1.2"
+version = "0.1.3"
 
 # converts count data to fpkm and tpm values
 # remove anyheaders ...
@@ -33,7 +33,7 @@ def prepare_data(**opt):
     user_biotypes=opt['transcript_biotype']
     # create data frame from htseq count data, ignore last 5 line of summary stats
     count_df = create_df(count_file,5,0,[index_label,'count'], index_label)
-    # create gene length data frame 
+    # create gene length data frame
     gene_len_df = create_df(gene_len_file,0,1, [index_label,'gene','biotype','chr', 'mean','median', 'longest_isoform', 'merged'], index_label)
 
     # check if gene length and count data frame have equal rows
@@ -62,7 +62,7 @@ def prepare_data(**opt):
     combined_df['fpkm_uq'] = (combined_df['count'] * 1e9) / (uq * combined_df[gene_len_col])
     #TPM = FPKM / (sum of FPKM over all genes/transcripts) * 10^6
     combined_df['tpm'] = combined_df['fpkm']/ combined_df['fpkm'].sum() * 1e6
-	
+
     # print results and header lines ....
     header_data={}
     for key in opt:
@@ -76,7 +76,7 @@ def prepare_data(**opt):
 
     return
 
-# print data frame 
+# print data frame
 def _print_df(mydf, index_label, count_file, header_df, output_dir, no_compression):
     mydf = mydf.round(decimals=2)
     (_, name) = os.path.split(count_file)
@@ -107,10 +107,10 @@ def main():
 
     required.add_argument("-g", "--gene_len", type=str, dest="gene_len", required=True,
                           default=None, help="gene length file path, format: ensid gene_name length [Warning first line will be skipped as header]")
-    
+
     optional.add_argument("-od", "--output_dir", type=str, dest="output_dir", required=False,
                           default=None, help="output directory path, default to current directory.")
-    
+
     optional.add_argument('-nc', '--no_compression', dest='no_compression', action='store_true', default=False)
 
     optional.add_argument("-minrc", "--minimum_read_count", type=int, dest="minimum_read_count", required=False,
