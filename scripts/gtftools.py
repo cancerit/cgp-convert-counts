@@ -283,7 +283,6 @@ def merge_exon(GTFfile_obj,merged_exon_file=''):
 	exon={}
 	gene_meta={}
 	for line in GTFfile_obj:
-		print(line)
 		table=line.split('\t')
 		if line[0] != '#': #and table[0] in chroms:  # skip comment line
 			if table[2] == 'exon':
