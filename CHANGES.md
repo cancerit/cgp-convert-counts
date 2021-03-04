@@ -1,5 +1,9 @@
 # CHANGES
 
+## 0.1.3
+
+* `gtftools.py` fix for genes without a gene_name data point in a GTF file, falls back to the gene_id data point instead
+
 ## 0.1.2
 
 * cleaned header of `get_tmp_fpkm.py`; It now produce compressed output by default, and has a `--no-compression` option to disable it.
