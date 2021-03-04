@@ -5,11 +5,11 @@ import sys
 import argparse
 import pandas as pd
 
-version = "0.1.2"
+version = "0.1.3"
 
 # converts count data to fpkm and tpm values
 # needs some mofifications before running ....
-# prepare data 
+# prepare data
 # print data frame
 def _print_df(mydf, outfile, index_label):
     mydf.to_csv(outfile, sep='\t', mode='w', header=True, index=True, index_label=index_label, doublequote=False)
