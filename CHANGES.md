@@ -1,5 +1,9 @@
 # CHANGES
 
+## 0.1.4
+
+* missed updating Dockerfile version number in 0.1.3
+
 ## 0.1.3
 
 * `gtftools.py` fix for genes without a gene_name data point in a GTF file, falls back to the gene_id data point instead
