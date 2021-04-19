@@ -5,7 +5,7 @@ import argparse
 import sys
 import tempfile
 
-version = "0.1.4"
+version = "0.1.5"
 
 ###############
 # sb43 modified to suit casm need and output additional columns : boiotype, gnene name and chromosome
@@ -293,7 +293,11 @@ def merge_exon(GTFfile_obj,merged_exon_file=''):
 				else:
 					exon[gene]=[iexon]
 					#sb43 done only once for each gene....
-					biotype = line.split('gene_biotype')[1].split('"')[1]
+					if line.find('gene_biotype') >= 0:
+						biotype = line.split('gene_biotype')[1].split('"')[1]
+					else:
+						biotype = 'unknown'
+
 					if line.find('gene_name') >= 0:
 						gene_name = line.split('gene_name')[1].split('"')[1]
 						gene_meta[gene] = [gene_name, biotype, table[0] ]
