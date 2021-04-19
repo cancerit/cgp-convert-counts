@@ -2,7 +2,7 @@
 
 ## 0.1.54
 
-* `gtftools.py` adding support for non standard ensembl lines, mainly for ERCC92 useage
+* `gtftools.py` adding support for non standard ensembl lines, mainly for ERCC92 usage
   * Giving gene_biotype a default of `unknown`if absent
 
 ## 0.1.4
