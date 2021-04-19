@@ -5,7 +5,7 @@ import sys
 import argparse
 import pandas as pd
 
-version = "0.1.4"
+version = "0.1.5"
 
 # converts count data to fpkm and tpm values
 # needs some mofifications before running ....
