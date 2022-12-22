@@ -31,8 +31,10 @@ def prepare_data(**opt):
     min_read_count = opt['minimum_read_count']
     gene_len_col=opt['gene_length_column']
     user_biotypes=opt['transcript_biotype']
+    skip_footer_lines=opt['skip_footer_lines']
+    skip_header_lines=opt['skip_header_lines']
     # create data frame from htseq count data, ignore last 5 line of summary stats
-    count_df = create_df(count_file,5,0,[index_label,'count'], index_label)
+    count_df = create_df(count_file,skip_footer_lines,skip_header_lines,[index_label,'count'], index_label)
     # create gene length data frame
     gene_len_df = create_df(gene_len_file,0,1, [index_label,'gene','biotype','chr', 'mean','median', 'longest_isoform', 'merged'], index_label)
 
@@ -41,7 +43,7 @@ def prepare_data(**opt):
     print("COUNT_ROWS:{} GENELEN_ROWS:{} ENSID_COMPARISON STATUS:{}".format(count_df.shape[0],gene_len_df.shape[0], ensid_comparison) )
 
     if  not ensid_comparison:
-        sys.exit("Error: Ensembl ids in gene length and count file DO NOT match")
+        sys.exit("Error: Ensembl ids in gene length and count file DO NOT match, try skiping_header_lines  and skip_footer_lines options")
 
     drop_columns=['mean','median', 'longest_isoform', 'merged']
     drop_columns.remove(gene_len_col)
@@ -107,6 +109,12 @@ def main():
 
     required.add_argument("-g", "--gene_len", type=str, dest="gene_len", required=True,
                           default=None, help="gene length file path, format: ensid gene_name length [Warning first line will be skipped as header]")
+
+    required.add_argument("-sh", "--skip_header_lines", type=int, dest="skip_header_lines", required=False,
+                          default=0, help="skip number of header lines in counts file [default 0 to match HTSeq output]")
+
+    required.add_argument("-sf", "--skip_footer_lines", type=int, dest="skip_footer_lines", required=False,
+                          default=5, help="skip number of footer lines in counts file [default 5 to match HTSeq output]")
 
     optional.add_argument("-od", "--output_dir", type=str, dest="output_dir", required=False,
                           default=None, help="output directory path, default to current directory.")
